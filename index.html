@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Multi-player RPS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/reset.css" />
+</head>
+<body>
+    <div class="header-container">
+        <header>Pokemon Rock Player Scissors!</header>
+    </div>
+    
+    <div class="game-container">
+        <div class="player-one-box">
+            <p class="player-text">Waiting for Player 1...</p>
+            <div id="player-one-pokemon" class="pokemon-rows">
+                <div id="player-one-rock" class="all-pokemon">
+                    <img class="pokemon-image" src="assets/images/golem.svg">
+                    <p id="rock1-name" class="pokemon-name">Golem</p>
+                    <p id="rock1-type" class="pokemon-type">(Rock)</p>
+                </div>
+                <div id="player-one-paper" class="all-pokemon">
+                    <img class="pokemon-image" src="assets/images/deerling.png">
+                    <p id="paper1-name" class="pokemon-name">Deerling</p>
+                    <p id="paper1-type" class="pokemon-type">(Paper)</p>
+                </div>
+                <div id="player-one-scissor" class="all-pokemon">
+                    <img class="pokemon-image" src="assets/images/scyther.svg">
+                    <p id="scissor1-name" class="pokemon-name">Scyther</p>
+                    <p id="scissor1-type" class="pokemon-type">(Scissors)</p>
+                </div>
+            </div>
+        </div>
+        <div class="arena-box"></div>
+        <div class="player-two-box">
+            <p class="player-text">Waiting for Player 2...</p>
+            <div id="player-two-pokemon" class="pokemon-rows">
+                <div id="player-two-rock" class="all-pokemon">
+                    <img class="pokemon-image" src="assets/images/regirock.svg">
+                    <p id="rock2-name">Regirock</p>
+                    <p id="rock2-type" class="pokemon-type">(Rock)</p>
+                </div>
+                <div id="player-two-paper" class="all-pokemon">
+                    <img class="pokemon-image" src="assets/images/grotle.png">
+                    <p id="paper2-name" class="pokemon-name">Grotle</p>
+                    <p id="paper2-type" class="pokemon-type">(Paper)</p>
+                </div>
+                <div id="player-two-scissor" class="all-pokemon">
+                    <img class="pokemon-image" src="assets/images/scizor.png">
+                    <p id="scissor2-name" class="pokemon-name">Scizor</p>
+                    <p id="scissor2-type" class="pokemon-type">(Scissors)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-container">
+
+    </div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+<script src="assets/javascript/rps.js"></script>    
+</body>
+</html>
