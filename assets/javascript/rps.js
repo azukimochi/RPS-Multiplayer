@@ -9,8 +9,17 @@ var config = {
 firebase.initializeApp(config);
 
 var database = firebase.database();
+// var chatBranch = firebase.database("chat");
+// var playersBranch = firebase.database().ref("players");
+// var playerOneBranch = firebase.database().ref("players/1");
+// var playerTwoBranch = firebase.database().ref("players/2");
 
-
+var playerOne = "";
+var playerTwo;
+var winsOne = 0;
+var winsTwo = 0;
+var lossesOne = 0;
+var lossesTwo = 0;
 
 
 
@@ -26,5 +35,27 @@ $(document).ready(function() {
    $("#add-player").click(function() {
        event.preventDefault;
        console.log($("#player-input").val());
-   });
+       console.log(playerOne);
+       if (playerOne === "") {
+            playerOne = $("#player-input").val();
+            database.ref("players/1").set({
+               player: playerOne,
+               wins: winsOne,
+               losses: lossesOne,
+           })
+        } else {
+            playerTwo = $("#player-input").val();
+            database.ref("players/2").set({
+               player: playerTwo,
+               wins: winsTwo,
+               losses: lossesTwo,
+            });
+        } console.log(playerTwo);
+    });
+    // database.ref("players/1").on("value", function(snapshot) {
+    //     console.log(snapshot.val());
+    //     // highPrice = snapshot.val().highPrice; 
+    //     // highBidder = snapshot.val().highBidder;
+    // });
+
 });
