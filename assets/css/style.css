@@ -27,6 +27,24 @@
 .arena-box {
     height: 200px;
     background-color: lavender;
+    display: inline-flex;
+    text-align: center;
+}
+
+#player-one-choice {
+    background-color: pink;
+    width: 200px;
+}
+
+#versus {
+    background-color: orange;
+    width: 200px;
+    padding-top: 30px;
+}
+
+#player-two-choice {
+    background-color: lightcoral;
+    width: 200px; 
 }
 
 .player-two-box {
