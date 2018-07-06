@@ -97,29 +97,76 @@ function designatePlayers() {
     if (playerOne === "") {
         playerOne = $("#player-input").val();
         console.log("After submit, Player One is " + playerOne)
-        $("#player1-text-bar").text("Player 1: " + playerOne + " has entered the stadium!");
+        // $("#player1-text-bar").text("Player 1: " + playerOne + " has entered the stadium!");
          playerOne = $("#player-input").val();
          database.ref("players/1").set({
             player: playerOne,
             wins: winsOne,
             losses: lossesOne,
         })
-     } else {
-         playerTwo = $("#player-input").val();
-         $("#player2-text-bar").text("Player 2: " + playerTwo + " has entered the stadium!");
-         database.ref("players/2").set({
+    } else {
+        playerTwo = $("#player-input").val();
+        // $("#player2-text-bar").text("Player 2: " + playerTwo + " has entered the stadium!");
+        database.ref("players/2").set({
             player: playerTwo,
             wins: winsTwo,
             losses: lossesTwo,
-         });
-         database.ref("turn-counter").set({
+        });
+        database.ref("turn-counter").set({
             turn: turnCount
-         });
-         makePokemonVisible();
-         turnIsPlayerOne();
-     } console.log("Player Two is " + playerTwo);
-        console.log("Turn count is " + turnCount);
+        });
+
+    }
 }
+//Start writing into the database for real-time changes
+database.ref("players/1").on("value", function(snapshot) {
+    console.log(snapshot.val());
+    var playerName = snapshot.val().player;
+    $("#player1-text-bar").text("Player 1: " + playerName + " has entered the stadium!");
+});
+
+database.ref("players/2").on("value", function(snapshot) {
+    console.log(snapshot.val());
+    var playerName = snapshot.val().player;
+    $("#player2-text-bar").text("Player 2: " + playerName + " has entered the stadium!");
+    makePokemonVisible();
+    turnIsPlayerOne();
+    console.log("Player Two is " + playerTwo);
+    console.log("Turn count is " + turnCount);
+});
+
+
+
+
+function clickingPokemon() {
+    if (turnOf === "turnOfPlayerOne") {
+        if ($(this).attr("data-team") === "playerOne") {
+            var choiceStatement = "<p>Player 1 chose"
+            console.log(this);
+            console.log("The team this is on: " + $(this).attr("data-team"));
+            console.log("The type: " + $(this).attr("data-type"));
+            $(this).prepend(choiceStatement);
+            $("#player-one-choice").append(this);
+            playerOneDecision = $(this).attr("data-type");
+            turnIsPlayerTwo();
+        } 
+    } else if (turnOf === "turnOfPlayerTwo") {
+        if ($(this).attr("data-team") === "playerTwo") {
+            var choiceStatement = "<p>Player 2 chose"
+            console.log(this);
+            console.log("The team this is on: " + $(this).attr("data-team"));
+            console.log("The type: " + $(this).attr("data-type"));
+            $(this).prepend(choiceStatement);
+            $("#player-two-choice").append(this);
+            playerTwoDecision = $(this).attr("data-type");
+        }
+    }
+}
+
+
+
+
+
 
 //start of function initiation
 $(document).ready(function() {
@@ -158,11 +205,5 @@ $(document).ready(function() {
        designatePlayers();
     });
 
-
-    // database.ref("players/1").on("value", function(snapshot) {
-    //     console.log(snapshot.val());
-    //     // highPrice = snapshot.val().highPrice; 
-    //     // highBidder = snapshot.val().highBidder;
-    // });
 
 });
