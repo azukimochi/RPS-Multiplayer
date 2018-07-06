@@ -79,3 +79,8 @@
 .pokemon-image {
     height: 100px;
 }
+
+.both-scoreboards {
+    margin-right: 25%;
+    margin-top: 10%;
+}
