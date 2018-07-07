@@ -15,6 +15,7 @@ var database = firebase.database();
 // var playerOneBranch = firebase.database().ref("players/1"); <-delete if not needed
 // var playerTwoBranch = firebase.database().ref("players/2"); <-delete if not needed
 
+var globalDoesExist;
 var playerOne = "";
 var playerTwo;
 var winsOne = 0;
@@ -25,6 +26,8 @@ var turnCount = 1;
 var turnOf;
 var playerOneDecision;
 var playerTwoDecision;
+var playerOneName;
+var playerTwoName;
 
 //*** defining functions below ***
 
@@ -40,12 +43,12 @@ function makePokemonVisible() {
 }
 
 function turnIsPlayerOne() {
-    $("#player1-text-bar").text("Player 1: " + playerOne + "'s turn");
+    $("#player1-text-bar").text("Player 1: " + playerOneName + "'s turn");
     $(".player-one-box").css("border-width", "5px");
     $(".player-one-box").css("border-color", "red");
     $(".player-one-box").css("border-style", "groove");
 
-    $("#player2-text-bar").text("Player 2: " + playerTwo);
+    $("#player2-text-bar").text("Player 2: " + playerTwoName);
     $(".player-two-box").css("border-width", "");
     $(".player-two-box").css("border-color", "");
     $(".player-two-box").css("border-style", "");
@@ -94,74 +97,86 @@ function designatePlayers() {
     event.preventDefault;
     console.log($("Input is " + "#player-input").val());
     console.log("Before designation: " + playerOne);
-    if (playerOne === "") {
-        playerOne = $("#player-input").val();
-        console.log("After submit, Player One is " + playerOne)
-        // $("#player1-text-bar").text("Player 1: " + playerOne + " has entered the stadium!");
-         playerOne = $("#player-input").val();
-         database.ref("players/1").set({
-            player: playerOne,
-            wins: winsOne,
-            losses: lossesOne,
-        })
-    } else {
-        playerTwo = $("#player-input").val();
-        // $("#player2-text-bar").text("Player 2: " + playerTwo + " has entered the stadium!");
-        database.ref("players/2").set({
-            player: playerTwo,
-            wins: winsTwo,
-            losses: lossesTwo,
-        });
-        database.ref("turn-counter").set({
-            turn: turnCount
-        });
 
-    }
+    var ref = firebase.database().ref("players/1");
+    ref.once("value").then(function (snapshot) {
+        var doesExist = snapshot.exists();
+        console.log("Player 1 exists: " + doesExist);
+        if (doesExist === false) {
+            globalDoesExist = "false";
+        } else {
+            globalDoesExist = "true";
+        } console.log("Global Does Exist: " + globalDoesExist);
+
+        if (globalDoesExist == "false") {
+            playerOne = $("#player-input").val();
+            console.log("After submit, Player One is " + playerOne)
+            // $("#player1-text-bar").text("Player 1: " + playerOne + " has entered the stadium!");
+             playerOne = $("#player-input").val();
+             database.ref("players/1").set({
+                player: playerOne,
+                wins: winsOne,
+                losses: lossesOne,
+            })
+        } else {
+            playerTwo = $("#player-input").val();
+            // $("#player2-text-bar").text("Player 2: " + playerTwo + " has entered the stadium!");
+            database.ref("players/2").set({
+                player: playerTwo,
+                wins: winsTwo,
+                losses: lossesTwo,
+            });
+            database.ref("turn-counter").set({
+                turn: turnCount
+            });
+    
+        }
+    });
+    
 }
 //Start writing into the database for real-time changes
 database.ref("players/1").on("value", function(snapshot) {
     console.log(snapshot.val());
-    var playerName = snapshot.val().player;
-    $("#player1-text-bar").text("Player 1: " + playerName + " has entered the stadium!");
+    playerOneName = snapshot.val().player;
+    $("#player1-text-bar").text("Player 1: " + playerOneName + " has entered the stadium!");
 });
 
 database.ref("players/2").on("value", function(snapshot) {
     console.log(snapshot.val());
-    var playerName = snapshot.val().player;
-    $("#player2-text-bar").text("Player 2: " + playerName + " has entered the stadium!");
+    playerTwoName = snapshot.val().player;
+    $("#player2-text-bar").text("Player 2: " + playerTwoName + " has entered the stadium!");
     makePokemonVisible();
-    turnIsPlayerOne();
+    setInterval(turnIsPlayerOne, 3000);
     console.log("Player Two is " + playerTwo);
     console.log("Turn count is " + turnCount);
 });
 
 
 
-
-function clickingPokemon() {
-    if (turnOf === "turnOfPlayerOne") {
-        if ($(this).attr("data-team") === "playerOne") {
-            var choiceStatement = "<p>Player 1 chose"
-            console.log(this);
-            console.log("The team this is on: " + $(this).attr("data-team"));
-            console.log("The type: " + $(this).attr("data-type"));
-            $(this).prepend(choiceStatement);
-            $("#player-one-choice").append(this);
-            playerOneDecision = $(this).attr("data-type");
-            turnIsPlayerTwo();
-        } 
-    } else if (turnOf === "turnOfPlayerTwo") {
-        if ($(this).attr("data-team") === "playerTwo") {
-            var choiceStatement = "<p>Player 2 chose"
-            console.log(this);
-            console.log("The team this is on: " + $(this).attr("data-team"));
-            console.log("The type: " + $(this).attr("data-type"));
-            $(this).prepend(choiceStatement);
-            $("#player-two-choice").append(this);
-            playerTwoDecision = $(this).attr("data-type");
-        }
-    }
-}
+// function clickingPokemon() {
+//     if (turnOf === "turnOfPlayerOne") {
+//         if ($(this).attr("data-team") === "playerOne") {
+//             var choiceStatement = "<p>Player 1 chose"
+//             console.log(this);
+//             console.log("The team this is on: " + $(this).attr("data-team"));
+//             console.log("The type: " + $(this).attr("data-type"));
+//             $(this).prepend(choiceStatement);
+//             $("#player-one-choice").append(this);
+//             playerOneDecision = $(this).attr("data-type");
+//             turnIsPlayerTwo();
+//         } 
+//     } else if (turnOf === "turnOfPlayerTwo") {
+//         if ($(this).attr("data-team") === "playerTwo") {
+//             var choiceStatement = "<p>Player 2 chose"
+//             console.log(this);
+//             console.log("The team this is on: " + $(this).attr("data-team"));
+//             console.log("The type: " + $(this).attr("data-type"));
+//             $(this).prepend(choiceStatement);
+//             $("#player-two-choice").append(this);
+//             playerTwoDecision = $(this).attr("data-type");
+//         }
+//     }
+// }
 
 
 
