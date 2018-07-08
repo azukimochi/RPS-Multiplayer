@@ -109,6 +109,29 @@ function addAttrToPokemon() {
 
 }
 
+function calculateWinner() {
+    if (playerOneDecision == "rock" && playerTwoDecision == "rock") {
+        console.log("Winner is: It's a tie.");
+    } else if (playerOneDecision == "rock" && playerTwoDecision == "paper") {
+        console.log("Winner is Player 2");
+    } else if (playerOneDecision == "rock" && playerTwoDecision == "scissors") {
+        console.log("Winner is Player 1");
+    } else if (playerOneDecision == "paper" && playerTwoDecision == "rock") {
+        console.log("Winner is Player 1");
+    } else if (playerOneDecision == "paper" && playerTwoDecision == "paper") {
+        console.log("Winner is: It's a tie!");
+    } else if (playerOneDecision == "paper" && playerTwoDecision == "scissors") {
+        console.log("Winner is Player 2");
+    } else if (playerOneDecision == "scissors" && playerTwoDecision == "rock") {
+        console.log("Winner is Player 2");
+    } else if (playerOneDecision == "scissors" && playerTwoDecision == "paper") {
+        console.log("Winner is Player 1");
+    } else if (playerOneDecision == "scissors" && playerTwoDecision == "scissors") {
+        console.log("Winner is: It's a tie!");
+    }
+}
+
+
 
 //this is the function for submitting the names of player 1 and player 2 
 function designatePlayers() {
@@ -229,30 +252,24 @@ $(document).ready(function() {
     $(".all-pokemon").click(function () {
         if (globalPlayerStatus == "Player-1") {
             if ($(this).attr("data-team") === "playerOne") {
-                
                 playerOneDecision = $(this).attr("data-type");
                 database.ref("player1Choice").set({
                     decision: playerOneDecision
                 });
-                // turnIsPlayerTwo();
             }
-            // } else if (turnOf === "turnOfPlayerTwo") {
-                //     if ($(this).attr("data-team") === "playerTwo") {
-                    //         var choiceStatement = "<p>Player 2 chose"
-                    //         console.log(this);
-                    //         console.log("The team this is on: " + $(this).attr("data-team"));
-                    //         console.log("The type: " + $(this).attr("data-type"));
-                    //         $(this).prepend(choiceStatement);
-                    //         $("#player-two-choice").append(this);
-                    //         playerTwoDecision = $(this).attr("data-type");
-                    //     }
+        } else if (globalPlayerStatus == "Player-2") {
+                if ($(this).attr("data-team") === "playerTwo") {
+                    playerTwoDecision = $(this).attr("data-type");
+                    database.ref("player2Choice").set({
+                        decision: playerTwoDecision
+                });
+            }
         }
-        playerOneDecision = $(this).attr("data-type");
-        }); 
-            
+    }); 
+
             database.ref("player1Choice").on("value", function (snapshot) {
                 console.log(snapshot.val());
-                var playerOneDecision = snapshot.val().decision;
+                playerOneDecision = snapshot.val().decision;
                 if (playerOneDecision == "rock") {
                     var choiceStatement = "<p>Player 1 chose";
                     $("#player-one-rock").prepend(choiceStatement);
@@ -276,10 +293,38 @@ $(document).ready(function() {
                 console.log("Player 2's Decision: " + playerTwoDecision);
             });
 
-    $("#add-player").click(function() {
-        designatePlayers();
-    });
-            
-            
+            database.ref("player2Choice").on("value", function (snapshot) {
+                console.log(snapshot.val());
+                playerTwoDecision = snapshot.val().decision;
+                if (playerTwoDecision == "rock") {
+                    var choiceStatement = "<p>Player 2 chose";
+                    $("#player-two-rock").prepend(choiceStatement);
+                    $("#player-two-choice").append($("#player-two-rock"));
+                    $("#player-two-rock").css("visibility", "visible");
+                    // setTimeout(turnIsPlayerTwo, 3000);
+                    calculateWinner();
+                } else if (playerTwoDecision == "paper") {
+                    var choiceStatement = "<p>Player 2 chose";
+                    $("#player-two-paper").prepend(choiceStatement);
+                    $("#player-two-choice").append($("#player-two-paper"));
+                    $("#player-two-paper").css("visibility", "visible");
+                    // setTimeout(turnIsPlayerTwo, 3000);
+                    calculateWinner();
+                } else if (playerTwoDecision == "scissors") {
+                    var choiceStatement = "<p>Player 2 chose";
+                    $("#player-two-scissor").prepend(choiceStatement);
+                    $("#player-two-choice").append($("#player-two-scissor"));
+                    $("#player-two-scissor").css("visibility", "visible");
+                    // setTimeout(turnIsPlayerTwo, 3000);
+                    calculateWinner();
+                }
+                console.log("Player 1's Decision: " + playerOneDecision);
+                console.log("Player 2's Decision: " + playerTwoDecision);
+            });
+
+            $("#add-player").click(function() {
+                designatePlayers();
+             });
 });
+            
         
