@@ -34,6 +34,7 @@ var tiesOne = 0;
 var tiesTwo = 0;
 var playerOneTies = 0;
 var playerTwoTies = 0;
+var refDelete;
 
 //*** defining functions below ***
 
@@ -258,6 +259,8 @@ function designatePlayers() {
                 ties: tiesOne,
             })
 
+            database.ref("players/1").onDisconnect().remove();            
+
         } else {
             playerTwo = $("#player-input").val();
             globalPlayerStatus = "Player-2";
@@ -268,6 +271,8 @@ function designatePlayers() {
                 losses: lossesTwo,
                 ties: tiesTwo,
             });
+            database.ref("players/2").onDisconnect().remove();            
+            
             database.ref("turn-counter").set({
                 turn: turnCount
             });
@@ -337,7 +342,6 @@ database.ref("players/2").on("value", function(snapshot) {
     $("#player-two-wins").text("Wins: " + playerTwoWins);
     $("#player-two-losses").text("Losses: " + playerTwoLosses);
 });
-
 
 
 
@@ -455,29 +459,46 @@ $(document).ready(function() {
             $(".chatlog").append(br);
     });
 
-    function disconnectedMsg() {
-        $(".chatlog").append("A player has disconnected");
-    }
+    // function disconnectedMsg() {
+    //     $(".chatlog").append("A player has disconnected");
+    // }
     
-    var refDeletePlayer1 = firebase.database().ref("players/1");
-    refDeletePlayer1.onDisconnect().remove();
 
-    var refDeleteChat = firebase.database().ref("chat");
-    refDeleteChat.onDisconnect().remove();
+    // var refDeletePlayer1 = firebase.database().ref("players/1");
+    // refDeletePlayer1.onDisconnect().remove();
 
-    var refDeleteTurn = firebase.database().ref("turn-counter");
-    refDeleteTurn.onDisconnect().remove();
+    // var refDeleteChat = firebase.database().ref("chat");
+    // refDeleteChat.onDisconnect().remove();
 
-    var refDeletePlayer1Choice = firebase.database().ref("player1Choice");
-    refDeletePlayer1Choice.onDisconnect().remove();
+    // var refDeleteTurn = firebase.database().ref("turn-counter");
+    // refDeleteTurn.onDisconnect().remove();
 
-    var refDeletePlayer2Choice = firebase.database().ref("player2Choice");
-    refDeletePlayer2Choice.onDisconnect().remove();
+    // var refDeletePlayer1Choice = firebase.database().ref("player1Choice");
+    // refDeletePlayer1Choice.onDisconnect().remove();
+
+    // var refDeletePlayer2Choice = firebase.database().ref("player2Choice");
+    // refDeletePlayer2Choice.onDisconnect().remove();
 
 
-    var refDeletePlayer2 = firebase.database().ref("players/2");
-    refDeletePlayer2.onDisconnect().remove();
+    // var refDeletePlayer2 = firebase.database().ref("players/2");
+    // refDeletePlayer2.onDisconnect().remove();
 
+//     function deleteRef() {
+//         if (globalPlayerStatus == "Player-1") {
+//             refDelete = firebase.database().ref("players/1");
+//             refDelete.onDisconnect().remove(); 
+//         } else if (globalPlayerStatus == "Player-2") {
+//             refDelete = firebase.database().ref("players/2");
+//             refDelete.onDisconnect().remove(); 
+//         } else if (globalPlayerStatus == "") {
+//             console.log("No Global Player Status")
+//         }
+//         console.log("This is the ref to delete: " + refDelete);
+//     }
+
+// //    deleteRef();
+
+//    $(window).on('load', deleteRef);
 
 });
             
