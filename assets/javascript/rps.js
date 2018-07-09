@@ -34,7 +34,6 @@ var tiesOne = 0;
 var tiesTwo = 0;
 var playerOneTies = 0;
 var playerTwoTies = 0;
-var chatStatus;
 
 //*** defining functions below ***
 
@@ -274,15 +273,6 @@ function designatePlayers() {
             });
     
         }
-        // var playerRef = firebase.database().ref("players/1");
-        // var key1 = playerRef.key;
-        // key = playerRef.child("player")
-        // console.log("Key1 is: " + key1);
-        // console.log("Key is: " + key);
-        // playerRef.once("value").then(function (snapshot) {
-        //     console.log(snapshot.val());
-        // });
-
     });
     
 }
@@ -311,13 +301,13 @@ database.ref("players/1").on("value", function(snapshot) {
         $("#player1-text-bar").text("Player 1: " + playerOneName + " has entered the stadium!");
     } else if (turnCount > 1 && matchWinner == "player1") {
         $("#player1-text-bar").text("Player 1: " + playerOneName + " has won!");
-        $("#player2-text-bar").text("Player 1: " + playerTwoName + " has lost!");
+        $("#player2-text-bar").text("Player 2: " + playerTwoName + " has lost!");
     } else if (turnCount > 1 && matchWinner == "player2") {
         $("#player1-text-bar").text("Player 1: " + playerOneName + " has lost!");
-        $("#player2-text-bar").text("Player 1: " + playerTwoName + " has won!");
+        $("#player2-text-bar").text("Player 2: " + playerTwoName + " has won!");
     } else if (turnCount > 1 && matchWinner == "tie") {
         $("#player1-text-bar").text("Player 1: " + playerOneName + " has tied!");
-        $("#player2-text-bar").text("Player 1: " + playerTwoName + " has tied!");
+        $("#player2-text-bar").text("Player 2: " + playerTwoName + " has tied!");
     }
     if (playerOneDecision == "rock") {
         $("#player-one-rock").css("visibility", "visible");
@@ -347,35 +337,6 @@ database.ref("players/2").on("value", function(snapshot) {
     $("#player-two-wins").text("Wins: " + playerTwoWins);
     $("#player-two-losses").text("Losses: " + playerTwoLosses);
 });
-
-
-
-
-// function clickingPokemon() {
-//     if (turnOf === "turnOfPlayerOne") {
-//         if ($(this).attr("data-team") === "playerOne") {
-//             var choiceStatement = "<p>Player 1 chose"
-//             console.log(this);
-//             console.log("The team this is on: " + $(this).attr("data-team"));
-//             console.log("The type: " + $(this).attr("data-type"));
-//             $(this).prepend(choiceStatement);
-//             $("#player-one-choice").append(this);
-//             playerOneDecision = $(this).attr("data-type");
-//             turnIsPlayerTwo();
-//         } 
-//     } else if (turnOf === "turnOfPlayerTwo") {
-//         if ($(this).attr("data-team") === "playerTwo") {
-//             var choiceStatement = "<p>Player 2 chose"
-//             console.log(this);
-//             console.log("The team this is on: " + $(this).attr("data-team"));
-//             console.log("The type: " + $(this).attr("data-type"));
-//             $(this).prepend(choiceStatement);
-//             $("#player-two-choice").append(this);
-//             playerTwoDecision = $(this).attr("data-type");
-//         }
-//     }
-// }
-
 
 
 
@@ -473,35 +434,46 @@ $(document).ready(function() {
         var chatboxText = $("#chatboxText").val().trim();
         console.log("The new line is: " + chatboxText);
         if (globalPlayerStatus == "Player-1") {
-            chatStatus = "Player-1"
+            var chatStatus = playerOneName;
         } else if (globalPlayerStatus == "Player-2") {
-            chatStatus = "Player-2"
+            var chatStatus = playerTwoName;
         }
         database.ref("chat").push({
             line: chatboxText,
+            sender: chatStatus
         });
     });
 
     database.ref("chat").on("child_added", function (snapshot) {
-        chatStatus = chatStatus;
         console.log(snapshot.val());
         var line = snapshot.val().line;
+        var sender = snapshot.val().sender;
         var br = $("<br>");
         console.log("Line to be printed: " + line);
-        if (chatStatus == "Player-1") {
-            $(".chatlog").append(playerOneName + ": " + line);
+        console.log("Line sent by: " + sender);
+            $(".chatlog").append(sender + ": " + line);
             $(".chatlog").append(br);
-        } else if (chatStatus == "Player-2") {
-            $(".chatlog").append(playerTwoName + ": " + line);
-            $(".chatlog").append(br);
-        }
     });
 
+    function disconnectedMsg() {
+        $(".chatlog").append("A player has disconnected");
+    }
+    
     var refDeletePlayer1 = firebase.database().ref("players/1");
     refDeletePlayer1.onDisconnect().remove();
 
     var refDeleteChat = firebase.database().ref("chat");
     refDeleteChat.onDisconnect().remove();
+
+    var refDeleteTurn = firebase.database().ref("turn-counter");
+    refDeleteTurn.onDisconnect().remove();
+
+    var refDeletePlayer1Choice = firebase.database().ref("player1Choice");
+    refDeletePlayer1Choice.onDisconnect().remove();
+
+    var refDeletePlayer2Choice = firebase.database().ref("player2Choice");
+    refDeletePlayer2Choice.onDisconnect().remove();
+
 
     var refDeletePlayer2 = firebase.database().ref("players/2");
     refDeletePlayer2.onDisconnect().remove();
