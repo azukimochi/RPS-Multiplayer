@@ -34,6 +34,7 @@ var tiesOne = 0;
 var tiesTwo = 0;
 var playerOneTies = 0;
 var playerTwoTies = 0;
+var chatStatus;
 
 //*** defining functions below ***
 
@@ -405,95 +406,105 @@ $(document).ready(function() {
         }
     }); 
 
-            database.ref("player1Choice").on("value", function (snapshot) {
-                console.log(snapshot.val());
-                playerOneDecision = snapshot.val().decision;
-                if (playerOneDecision == "rock") {
-                    var choiceStatement = "<p>Player 1 chose";
-                    $("#player-one-rock").prepend(choiceStatement);
-                    $("#player-one-choice").append($("#player-one-rock"));
-                    // $("#player-one-rock").css("visibility", "visible");
-                    setTimeout(turnIsPlayerTwo, 3000);
-                } else if (playerOneDecision == "paper") {
-                    var choiceStatement = "<p>Player 1 chose";
-                    $("#player-one-paper").prepend(choiceStatement);
-                    $("#player-one-choice").append($("#player-one-paper"));
-                    // $("#player-one-paper").css("visibility", "visible");
-                    setTimeout(turnIsPlayerTwo, 3000);
-                } else if (playerOneDecision == "scissors") {
-                    var choiceStatement = "<p>Player 1 chose";
-                    $("#player-one-scissor").prepend(choiceStatement);
-                    $("#player-one-choice").append($("#player-one-scissor"));
-                    // $("#player-one-scissor").css("visibility", "visible");
-                    setTimeout(turnIsPlayerTwo, 3000);
-                }
-                console.log("Player 1's Decision: " + playerOneDecision);
-                console.log("Player 2's Decision: " + playerTwoDecision);
-            });
+    database.ref("player1Choice").on("value", function (snapshot) {
+        console.log(snapshot.val());
+        playerOneDecision = snapshot.val().decision;
+        if (playerOneDecision == "rock") {
+            var choiceStatement = "<p>Player 1 chose";
+            $("#player-one-rock").prepend(choiceStatement);
+            $("#player-one-choice").append($("#player-one-rock"));
+            // $("#player-one-rock").css("visibility", "visible");
+            setTimeout(turnIsPlayerTwo, 3000);
+        } else if (playerOneDecision == "paper") {
+            var choiceStatement = "<p>Player 1 chose";
+            $("#player-one-paper").prepend(choiceStatement);
+            $("#player-one-choice").append($("#player-one-paper"));
+            // $("#player-one-paper").css("visibility", "visible");
+            setTimeout(turnIsPlayerTwo, 3000);
+        } else if (playerOneDecision == "scissors") {
+            var choiceStatement = "<p>Player 1 chose";
+            $("#player-one-scissor").prepend(choiceStatement);
+            $("#player-one-choice").append($("#player-one-scissor"));
+            // $("#player-one-scissor").css("visibility", "visible");
+            setTimeout(turnIsPlayerTwo, 3000);
+        }
+        console.log("Player 1's Decision: " + playerOneDecision);
+        console.log("Player 2's Decision: " + playerTwoDecision);
+    });
 
-            database.ref("player2Choice").on("value", function (snapshot) {
-                console.log(snapshot.val());
-                playerTwoDecision = snapshot.val().decision;
-                if (playerTwoDecision == "rock") {
-                    var choiceStatement = "<p>Player 2 chose";
-                    $("#player-two-rock").prepend(choiceStatement);
-                    $("#player-two-choice").append($("#player-two-rock"));
-                    $("#player-two-rock").css("visibility", "visible");
-                    setTimeout(calculateWinner, 1500);
-                    setTimeout(putPokemonBack, 2000);
-                    setTimeout(turnIsPlayerOne, 2000);
-                } else if (playerTwoDecision == "paper") {
-                    var choiceStatement = "<p>Player 2 chose";
-                    $("#player-two-paper").prepend(choiceStatement);
-                    $("#player-two-choice").append($("#player-two-paper"));
-                    $("#player-two-paper").css("visibility", "visible");
-                    setTimeout(calculateWinner, 1500);
-                    setTimeout(putPokemonBack, 2000);
-                    setTimeout(turnIsPlayerOne, 2000);
-                } else if (playerTwoDecision == "scissors") {
-                    var choiceStatement = "<p>Player 2 chose";
-                    $("#player-two-scissor").prepend(choiceStatement);
-                    $("#player-two-choice").append($("#player-two-scissor"));
-                    $("#player-two-scissor").css("visibility", "visible");
-                    setTimeout(calculateWinner, 1500);
-                    setTimeout(putPokemonBack, 2000);
-                    setTimeout(turnIsPlayerOne, 2000);
-                }
-                console.log("Player 1's Decision: " + playerOneDecision);
-                console.log("Player 2's Decision: " + playerTwoDecision);
-            });
+    database.ref("player2Choice").on("value", function (snapshot) {
+        console.log(snapshot.val());
+        playerTwoDecision = snapshot.val().decision;
+        if (playerTwoDecision == "rock") {
+            var choiceStatement = "<p>Player 2 chose";
+            $("#player-two-rock").prepend(choiceStatement);
+            $("#player-two-choice").append($("#player-two-rock"));
+            $("#player-two-rock").css("visibility", "visible");
+            setTimeout(calculateWinner, 1500);
+            setTimeout(putPokemonBack, 2000);
+            setTimeout(turnIsPlayerOne, 2000);
+        } else if (playerTwoDecision == "paper") {
+            var choiceStatement = "<p>Player 2 chose";
+            $("#player-two-paper").prepend(choiceStatement);
+            $("#player-two-choice").append($("#player-two-paper"));
+            $("#player-two-paper").css("visibility", "visible");
+            setTimeout(calculateWinner, 1500);
+            setTimeout(putPokemonBack, 2000);
+            setTimeout(turnIsPlayerOne, 2000);
+        } else if (playerTwoDecision == "scissors") {
+            var choiceStatement = "<p>Player 2 chose";
+            $("#player-two-scissor").prepend(choiceStatement);
+            $("#player-two-choice").append($("#player-two-scissor"));
+            $("#player-two-scissor").css("visibility", "visible");
+            setTimeout(calculateWinner, 1500);
+            setTimeout(putPokemonBack, 2000);
+            setTimeout(turnIsPlayerOne, 2000);
+        }
+        console.log("Player 1's Decision: " + playerOneDecision);
+        console.log("Player 2's Decision: " + playerTwoDecision);
+    });
 
-            $("#add-player").click(function() {
-                designatePlayers();
-             });
+    $("#add-player").click(function () {
+        designatePlayers();
+    });
 
-             $("#chatboxBtn").click(function() {
-                 event.preventDefault();
-                 console.log("Hi");
-                 var chatboxText = $("#chatboxText").val().trim();
-                 console.log("The new line is: " + chatboxText);
-                 database.ref("chat").push({
-                    line: chatboxText,
-                 });
-             });
+    $("#chatboxBtn").click(function () {
+        event.preventDefault();
+        var chatboxText = $("#chatboxText").val().trim();
+        console.log("The new line is: " + chatboxText);
+        if (globalPlayerStatus == "Player-1") {
+            chatStatus = "Player-1"
+        } else if (globalPlayerStatus == "Player-2") {
+            chatStatus = "Player-2"
+        }
+        database.ref("chat").push({
+            line: chatboxText,
+        });
+    });
 
-             database.ref("chat").on("child_added", function(snapshot) {
-                console.log(snapshot.val());
-                var line = snapshot.val().line;
-                var br = $("<br>");
-                console.log("Line to be printed: " + line);
-                if (globalPlayerStatus == "") {
-                    $(".chatlog").append("Unknown Player: " + line);
-                    $(".chatlog").append(br);
-                } else if (globalPlayerStatus == "Player-1") {
-                    $(".chatlog").append(playerOneName + ": " + line);
-                    $(".chatlog").append(br);
-                } else if (globalPlayerStatus == "Player-2") {
-                    $(".chatlog").append(playerTwoName + ": " + line);
-                    $(".chatlog").append(br);
-                }
-             });
+    database.ref("chat").on("child_added", function (snapshot) {
+        chatStatus = chatStatus;
+        console.log(snapshot.val());
+        var line = snapshot.val().line;
+        var br = $("<br>");
+        console.log("Line to be printed: " + line);
+        if (chatStatus == "Player-1") {
+            $(".chatlog").append(playerOneName + ": " + line);
+            $(".chatlog").append(br);
+        } else if (chatStatus == "Player-2") {
+            $(".chatlog").append(playerTwoName + ": " + line);
+            $(".chatlog").append(br);
+        }
+    });
 
+    var refDeletePlayer1 = firebase.database().ref("players/1");
+    refDeletePlayer1.onDisconnect().remove();
+
+    var refDeleteChat = firebase.database().ref("chat");
+    refDeleteChat.onDisconnect().remove();
+
+    var refDeletePlayer2 = firebase.database().ref("players/2");
+    refDeletePlayer2.onDisconnect().remove();
 
 
 });
