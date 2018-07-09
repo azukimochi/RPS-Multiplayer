@@ -37,10 +37,11 @@ var playerTwoTies = 0;
 
 //*** defining functions below ***
 
-
+function makeScoresInvisble() {
+    $(".both-scoreboards").css("visibility", "hidden");   
+}
 function makePokemonInvisible() {
     $(".all-pokemon").css("visibility", "hidden");
-    $(".both-scoreboards").css("visibility", "hidden");
 }
 
 function makePokemon1Visible() {
@@ -54,6 +55,18 @@ function makePokemon2Visible() {
     $("#player-two-paper").css("visibility", "visible");
     $("#player-two-scissor").css("visibility", "visible");
 }
+
+function putPokemonBack() {
+    makePokemonInvisible();
+    $("#player-one-pokemon").append($("#player-one-rock"));
+    $("#player-one-pokemon").append($("#player-one-paper"));
+    $("#player-one-pokemon").append($("#player-one-scissor"));
+
+    $("#player-two-pokemon").append($("#player-two-rock"));
+    $("#player-two-pokemon").append($("#player-two-paper"));
+    $("#player-two-pokemon").append($("#player-two-scissor"));
+}
+
 
 function turnIsPlayerOne() {
     
@@ -179,7 +192,7 @@ function player2Wins() {
     database.ref("players/1").set({
         player: playerOneName,
         wins: playerOneWins,
-        losses: playerOneLosses,
+        losses: playerOneLosses,  
         ties: playerOneTies,
     });
     database.ref("players/2").set({
@@ -286,6 +299,7 @@ database.ref("turn-counter").on("value", function(snapshot) {
 
 database.ref("players/1").on("value", function(snapshot) {
     matchWinner = matchWinner;
+    playerOneDecision = playerOneDecision;
     console.log(snapshot.val());
     playerOneName = snapshot.val().player;
     playerOneWins = snapshot.val().wins;
@@ -304,6 +318,14 @@ database.ref("players/1").on("value", function(snapshot) {
         $("#player1-text-bar").text("Player 1: " + playerOneName + " has tied!");
         $("#player2-text-bar").text("Player 1: " + playerTwoName + " has tied!");
     }
+    if (playerOneDecision == "rock") {
+        $("#player-one-rock").css("visibility", "visible");
+    } else if (playerOneDecision == "paper") {
+        $("#player-one-paper").css("visibility", "visible");
+    } else if (playerOneDecision == "scissors") {
+        $("#player-one-scissor").css("visibility", "visible");
+    }
+
     $("#player-one-score").css("visibility", "visible");
     $("#player-one-wins").text("Wins: " + playerOneWins);
     $("#player-one-losses").text("Losses: " + playerOneLosses);
@@ -362,6 +384,7 @@ database.ref("players/2").on("value", function(snapshot) {
 $(document).ready(function() {
     
     makePokemonInvisible();
+    makeScoresInvisble();
     addAttrToPokemon();
     
     $(".all-pokemon").click(function () {
@@ -389,19 +412,19 @@ $(document).ready(function() {
                     var choiceStatement = "<p>Player 1 chose";
                     $("#player-one-rock").prepend(choiceStatement);
                     $("#player-one-choice").append($("#player-one-rock"));
-                    $("#player-one-rock").css("visibility", "visible");
+                    // $("#player-one-rock").css("visibility", "visible");
                     setTimeout(turnIsPlayerTwo, 3000);
                 } else if (playerOneDecision == "paper") {
                     var choiceStatement = "<p>Player 1 chose";
                     $("#player-one-paper").prepend(choiceStatement);
                     $("#player-one-choice").append($("#player-one-paper"));
-                    $("#player-one-paper").css("visibility", "visible");
+                    // $("#player-one-paper").css("visibility", "visible");
                     setTimeout(turnIsPlayerTwo, 3000);
                 } else if (playerOneDecision == "scissors") {
                     var choiceStatement = "<p>Player 1 chose";
                     $("#player-one-scissor").prepend(choiceStatement);
                     $("#player-one-choice").append($("#player-one-scissor"));
-                    $("#player-one-scissor").css("visibility", "visible");
+                    // $("#player-one-scissor").css("visibility", "visible");
                     setTimeout(turnIsPlayerTwo, 3000);
                 }
                 console.log("Player 1's Decision: " + playerOneDecision);
@@ -416,22 +439,25 @@ $(document).ready(function() {
                     $("#player-two-rock").prepend(choiceStatement);
                     $("#player-two-choice").append($("#player-two-rock"));
                     $("#player-two-rock").css("visibility", "visible");
-                    // setTimeout(turnIsPlayerTwo, 3000);
-                    calculateWinner();
+                    setTimeout(calculateWinner, 1500);
+                    setTimeout(putPokemonBack, 2000);
+                    setTimeout(turnIsPlayerOne, 2000);
                 } else if (playerTwoDecision == "paper") {
                     var choiceStatement = "<p>Player 2 chose";
                     $("#player-two-paper").prepend(choiceStatement);
                     $("#player-two-choice").append($("#player-two-paper"));
                     $("#player-two-paper").css("visibility", "visible");
-                    // setTimeout(turnIsPlayerTwo, 3000);
-                    calculateWinner();
+                    setTimeout(calculateWinner, 1500);
+                    setTimeout(putPokemonBack, 2000);
+                    setTimeout(turnIsPlayerOne, 2000);
                 } else if (playerTwoDecision == "scissors") {
                     var choiceStatement = "<p>Player 2 chose";
                     $("#player-two-scissor").prepend(choiceStatement);
                     $("#player-two-choice").append($("#player-two-scissor"));
                     $("#player-two-scissor").css("visibility", "visible");
-                    // setTimeout(turnIsPlayerTwo, 3000);
-                    calculateWinner();
+                    setTimeout(calculateWinner, 1500);
+                    setTimeout(putPokemonBack, 2000);
+                    setTimeout(turnIsPlayerOne, 2000);
                 }
                 console.log("Player 1's Decision: " + playerOneDecision);
                 console.log("Player 2's Decision: " + playerTwoDecision);
