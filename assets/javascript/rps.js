@@ -29,6 +29,11 @@ var playerOneWins;
 var playerTwoLosses;
 var playerTwoWins;
 var globalPlayerStatus;
+var matchWinner;
+var tiesOne = 0;
+var tiesTwo = 0;
+var playerOneTies = 0;
+var playerTwoTies = 0;
 
 //*** defining functions below ***
 
@@ -112,26 +117,104 @@ function addAttrToPokemon() {
 function calculateWinner() {
     if (playerOneDecision == "rock" && playerTwoDecision == "rock") {
         console.log("Winner is: It's a tie.");
+        increaseTurns();
+        tieMatch();
     } else if (playerOneDecision == "rock" && playerTwoDecision == "paper") {
         console.log("Winner is Player 2");
+        increaseTurns();
+        player2Wins();
     } else if (playerOneDecision == "rock" && playerTwoDecision == "scissors") {
         console.log("Winner is Player 1");
+        increaseTurns();
+        player1Wins();
     } else if (playerOneDecision == "paper" && playerTwoDecision == "rock") {
         console.log("Winner is Player 1");
+        increaseTurns();
+        player1Wins();
     } else if (playerOneDecision == "paper" && playerTwoDecision == "paper") {
         console.log("Winner is: It's a tie!");
+        increaseTurns();
+        tieMatch();
     } else if (playerOneDecision == "paper" && playerTwoDecision == "scissors") {
         console.log("Winner is Player 2");
+        increaseTurns();
+        player2Wins();
     } else if (playerOneDecision == "scissors" && playerTwoDecision == "rock") {
         console.log("Winner is Player 2");
+        increaseTurns();
+        player2Wins();
     } else if (playerOneDecision == "scissors" && playerTwoDecision == "paper") {
         console.log("Winner is Player 1");
+        increaseTurns();
+        player1Wins();
     } else if (playerOneDecision == "scissors" && playerTwoDecision == "scissors") {
         console.log("Winner is: It's a tie!");
+        increaseTurns();
+        tieMatch();
     }
 }
 
+function player1Wins() {
+    matchWinner = "player1";
+    playerOneWins++;
+    playerTwoLosses++;
+    database.ref("players/1").set({
+        player: playerOneName,
+        wins: playerOneWins,
+        losses: playerOneLosses,
+        ties: playerOneTies,
+    });
+    database.ref("players/2").set({
+        player: playerTwoName,
+        wins: playerTwoWins,
+        losses: playerTwoLosses,
+        ties: playerTwoTies,
+    });
+}
 
+function player2Wins() {
+    matchWinner = "player2";
+    playerTwoWins++;
+    playerOneLosses++;
+    database.ref("players/1").set({
+        player: playerOneName,
+        wins: playerOneWins,
+        losses: playerOneLosses,
+        ties: playerOneTies,
+    });
+    database.ref("players/2").set({
+        player: playerTwoName,
+        wins: playerTwoWins,
+        losses: playerTwoLosses,
+        ties: playerTwoTies,
+    });
+}
+
+function tieMatch() {
+    matchWinner = "tie";
+    playerOneTies++;
+    playerTwoTies++;
+    database.ref("players/1").set({
+        player: playerOneName,
+        wins: playerOneWins,
+        losses: playerOneLosses,
+        ties: playerOneTies,
+    });
+    database.ref("players/2").set({
+        player: playerTwoName,
+        wins: playerTwoWins,
+        losses: playerTwoLosses,
+        ties: playerTwoTies,
+    });
+}
+
+
+function increaseTurns() {
+    turnCount++;
+    database.ref("turn-counter").set({
+        turn: turnCount
+    });
+}
 
 //this is the function for submitting the names of player 1 and player 2 
 function designatePlayers() {
@@ -159,7 +242,9 @@ function designatePlayers() {
                 player: playerOne,
                 wins: winsOne,
                 losses: lossesOne,
+                ties: tiesOne,
             })
+
         } else {
             playerTwo = $("#player-input").val();
             globalPlayerStatus = "Player-2";
@@ -168,6 +253,7 @@ function designatePlayers() {
                 player: playerTwo,
                 wins: winsTwo,
                 losses: lossesTwo,
+                ties: tiesTwo,
             });
             database.ref("turn-counter").set({
                 turn: turnCount
@@ -186,28 +272,57 @@ function designatePlayers() {
     });
     
 }
+
+
+
+
+
 //Start writing into the database for real-time changes
+
+database.ref("turn-counter").on("value", function(snapshot) {
+    turnCount = snapshot.val().turn
+});
+
+
 database.ref("players/1").on("value", function(snapshot) {
+    matchWinner = matchWinner;
     console.log(snapshot.val());
     playerOneName = snapshot.val().player;
     playerOneWins = snapshot.val().wins;
     playerOneLosses = snapshot.val().losses;
-    $("#player1-text-bar").text("Player 1: " + playerOneName + " has entered the stadium!");
+    playerOneTies = snapshot.val().ties;
+    console.log(turnCount);
+    if (turnCount == 1) {
+        $("#player1-text-bar").text("Player 1: " + playerOneName + " has entered the stadium!");
+    } else if (turnCount > 1 && matchWinner == "player1") {
+        $("#player1-text-bar").text("Player 1: " + playerOneName + " has won!");
+        $("#player2-text-bar").text("Player 1: " + playerTwoName + " has lost!");
+    } else if (turnCount > 1 && matchWinner == "player2") {
+        $("#player1-text-bar").text("Player 1: " + playerOneName + " has lost!");
+        $("#player2-text-bar").text("Player 1: " + playerTwoName + " has won!");
+    } else if (turnCount > 1 && matchWinner == "tie") {
+        $("#player1-text-bar").text("Player 1: " + playerOneName + " has tied!");
+        $("#player2-text-bar").text("Player 1: " + playerTwoName + " has tied!");
+    }
     $("#player-one-score").css("visibility", "visible");
     $("#player-one-wins").text("Wins: " + playerOneWins);
     $("#player-one-losses").text("Losses: " + playerOneLosses);
 });
 
 database.ref("players/2").on("value", function(snapshot) {
+    matchWinner = matchWinner;
     console.log(snapshot.val());
     playerTwoName = snapshot.val().player;
     playerTwoWins = snapshot.val().wins;
     playerTwoLosses = snapshot.val().losses;
-    $("#player2-text-bar").text("Player 2: " + playerTwoName + " has entered the stadium!");
+    playerTwoTies = snapshot.val().ties;
+    if (turnCount == 1) {
+        $("#player2-text-bar").text("Player 2: " + playerTwoName + " has entered the stadium!");
+        setTimeout(turnIsPlayerOne, 3000);
+    }
     $("#player-two-score").css("visibility", "visible");
     $("#player-two-wins").text("Wins: " + playerTwoWins);
     $("#player-two-losses").text("Losses: " + playerTwoLosses);
-    setTimeout(turnIsPlayerOne, 3000);
 });
 
 
