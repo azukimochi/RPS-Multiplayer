@@ -28,7 +28,7 @@ var playerOneLosses;
 var playerOneWins;
 var playerTwoLosses;
 var playerTwoWins;
-var globalPlayerStatus;
+var globalPlayerStatus = "";
 var matchWinner;
 var tiesOne = 0;
 var tiesTwo = 0;
@@ -231,7 +231,7 @@ function increaseTurns() {
 
 //this is the function for submitting the names of player 1 and player 2 
 function designatePlayers() {
-    event.preventDefault;
+    event.preventDefault();
     console.log($("Input is " + "#player-input").val());
     console.log("Before designation: " + playerOne);
 
@@ -466,6 +466,36 @@ $(document).ready(function() {
             $("#add-player").click(function() {
                 designatePlayers();
              });
+
+             $("#chatboxBtn").click(function() {
+                 event.preventDefault();
+                 console.log("Hi");
+                 var chatboxText = $("#chatboxText").val().trim();
+                 console.log("The new line is: " + chatboxText);
+                 database.ref("chat").push({
+                    line: chatboxText,
+                 });
+             });
+
+             database.ref("chat").on("child_added", function(snapshot) {
+                console.log(snapshot.val());
+                var line = snapshot.val().line;
+                var br = $("<br>");
+                console.log("Line to be printed: " + line);
+                if (globalPlayerStatus == "") {
+                    $(".chatlog").append("Unknown Player: " + line);
+                    $(".chatlog").append(br);
+                } else if (globalPlayerStatus == "Player-1") {
+                    $(".chatlog").append(playerOneName + ": " + line);
+                    $(".chatlog").append(br);
+                } else if (globalPlayerStatus == "Player-2") {
+                    $(".chatlog").append(playerTwoName + ": " + line);
+                    $(".chatlog").append(br);
+                }
+             });
+
+
+
 });
             
         
