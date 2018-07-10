@@ -166,6 +166,7 @@ function calculateWinner() {
         increaseTurns();
         tieMatch();
     }
+    
 }
 
 function player1Wins() {
@@ -184,6 +185,8 @@ function player1Wins() {
         losses: playerTwoLosses,
         ties: playerTwoTies,
     });
+    setTimeout(putPokemonBack, 2000);
+    setTimeout(turnIsPlayerOne, 2000);
 }
 
 function player2Wins() {
@@ -202,6 +205,8 @@ function player2Wins() {
         losses: playerTwoLosses,
         ties: playerTwoTies,
     });
+    setTimeout(putPokemonBack, 2000);
+    setTimeout(turnIsPlayerOne, 2000);
 }
 
 function tieMatch() {
@@ -220,11 +225,14 @@ function tieMatch() {
         losses: playerTwoLosses,
         ties: playerTwoTies,
     });
+    setTimeout(putPokemonBack, 2000);
+    setTimeout(turnIsPlayerOne, 2000);
 }
 
 
 function increaseTurns() {
     turnCount++;
+    console.log("The current turn count is: " + turnCount);
     database.ref("turn-counter").set({
         turn: turnCount
     });
@@ -289,7 +297,7 @@ function designatePlayers() {
 //Start writing into the database for real-time changes
 
 database.ref("turn-counter").on("value", function(snapshot) {
-    turnCount = snapshot.val().turn
+    turnCount = snapshot.val().turn;
 });
 
 
@@ -336,7 +344,7 @@ database.ref("players/2").on("value", function(snapshot) {
     playerTwoTies = snapshot.val().ties;
     if (turnCount == 1) {
         $("#player2-text-bar").text("Player 2: " + playerTwoName + " has entered the stadium!");
-        setTimeout(turnIsPlayerOne, 3000);
+        setTimeout(turnIsPlayerOne, 2000);
     }
     $("#player-two-score").css("visibility", "visible");
     $("#player-two-wins").text("Wins: " + playerTwoWins);
@@ -379,19 +387,19 @@ $(document).ready(function() {
             $("#player-one-rock").prepend(choiceStatement);
             $("#player-one-choice").append($("#player-one-rock"));
             // $("#player-one-rock").css("visibility", "visible");
-            setTimeout(turnIsPlayerTwo, 3000);
+            setTimeout(turnIsPlayerTwo, 1500);
         } else if (playerOneDecision == "paper") {
             var choiceStatement = "<p>Player 1 chose";
             $("#player-one-paper").prepend(choiceStatement);
             $("#player-one-choice").append($("#player-one-paper"));
             // $("#player-one-paper").css("visibility", "visible");
-            setTimeout(turnIsPlayerTwo, 3000);
+            setTimeout(turnIsPlayerTwo, 1500);
         } else if (playerOneDecision == "scissors") {
             var choiceStatement = "<p>Player 1 chose";
             $("#player-one-scissor").prepend(choiceStatement);
             $("#player-one-choice").append($("#player-one-scissor"));
             // $("#player-one-scissor").css("visibility", "visible");
-            setTimeout(turnIsPlayerTwo, 3000);
+            setTimeout(turnIsPlayerTwo, 1500);
         }
         console.log("Player 1's Decision: " + playerOneDecision);
         console.log("Player 2's Decision: " + playerTwoDecision);
@@ -406,24 +414,24 @@ $(document).ready(function() {
             $("#player-two-choice").append($("#player-two-rock"));
             $("#player-two-rock").css("visibility", "visible");
             setTimeout(calculateWinner, 1500);
-            setTimeout(putPokemonBack, 2000);
-            setTimeout(turnIsPlayerOne, 2000);
+            // setTimeout(putPokemonBack, 2000);
+            // setTimeout(turnIsPlayerOne, 2000);
         } else if (playerTwoDecision == "paper") {
             var choiceStatement = "<p>Player 2 chose";
             $("#player-two-paper").prepend(choiceStatement);
             $("#player-two-choice").append($("#player-two-paper"));
             $("#player-two-paper").css("visibility", "visible");
             setTimeout(calculateWinner, 1500);
-            setTimeout(putPokemonBack, 2000);
-            setTimeout(turnIsPlayerOne, 2000);
+            // setTimeout(putPokemonBack, 2000);
+            // setTimeout(turnIsPlayerOne, 2000);
         } else if (playerTwoDecision == "scissors") {
             var choiceStatement = "<p>Player 2 chose";
             $("#player-two-scissor").prepend(choiceStatement);
             $("#player-two-choice").append($("#player-two-scissor"));
             $("#player-two-scissor").css("visibility", "visible");
             setTimeout(calculateWinner, 1500);
-            setTimeout(putPokemonBack, 2000);
-            setTimeout(turnIsPlayerOne, 2000);
+            // setTimeout(putPokemonBack, 2000);
+            // setTimeout(turnIsPlayerOne, 2000);
         }
         console.log("Player 1's Decision: " + playerOneDecision);
         console.log("Player 2's Decision: " + playerTwoDecision);
