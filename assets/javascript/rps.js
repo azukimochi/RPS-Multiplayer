@@ -1,11 +1,11 @@
 //*** defining global scope variables ***
 var config = {
-    apiKey: "AIzaSyCW4ZQjx5hD-Yfa3vxwJJd8cQf6SEO-FQo",
-    authDomain: "multi-player-rps-20094.firebaseapp.com",
-    databaseURL: "https://multi-player-rps-20094.firebaseio.com",
-    projectId: "multi-player-rps-20094",
-    storageBucket: "multi-player-rps-20094.appspot.com",
-    messagingSenderId: "456723330628"
+    apiKey: "AIzaSyA6F9Aoe8cv-wSAeO93hu0NrWuBwvVmtK4",
+    authDomain: "rps-multiplayer-d3991.firebaseapp.com",
+    databaseURL: "https://rps-multiplayer-d3991.firebaseio.com",
+    projectId: "rps-multiplayer-d3991",
+    storageBucket: "rps-multiplayer-d3991.appspot.com",
+    messagingSenderId: "727507908434"
 };
 firebase.initializeApp(config);
 
@@ -35,6 +35,7 @@ var tiesTwo = 0;
 var playerOneTies = 0;
 var playerTwoTies = 0;
 var refDelete;
+var gameOverCount = 0;
 
 //*** defining functions below ***
 
@@ -266,9 +267,6 @@ function designatePlayers() {
                 losses: lossesOne,
                 ties: tiesOne,
             })
-
-            database.ref("players/1").onDisconnect().remove();            
-
         } else {
             playerTwo = $("#player-input").val();
             globalPlayerStatus = "Player-2";
@@ -279,8 +277,6 @@ function designatePlayers() {
                 losses: lossesTwo,
                 ties: tiesTwo,
             });
-            database.ref("players/2").onDisconnect().remove();            
-            
             database.ref("turn-counter").set({
                 turn: turnCount
             });
@@ -333,7 +329,40 @@ database.ref("players/1").on("value", function(snapshot) {
     $("#player-one-score").css("visibility", "visible");
     $("#player-one-wins").text("Wins: " + playerOneWins);
     $("#player-one-losses").text("Losses: " + playerOneLosses);
+
 });
+
+function testFunction() {
+    var ref = firebase.database().ref("players/1");
+    ref.once("value").then(function (snapshot) {
+        var doesPlayer1Exist = snapshot.exists();
+        console.log("Player 1 exists: " + doesPlayer1Exist);
+        if (doesPlayer1Exist === false) {
+            player1Exists = "false";
+        } else {
+            player1Exists = "true";
+        } console.log("Does Exist: " + player1Exists);
+
+        if (player1Exists == "false") {
+            console.log("Game has ended");
+            database.ref("chat").push({
+                line: "The other player isn't online. Refresh the page to enter a new match if you were in the middle of a match.",
+                sender: "WARNING",
+            });
+        }
+    });
+}
+
+// database.ref("GameOver").on("value", function(snapshot) {
+// //     var refreshCount = snapshot.val().gameOver;
+// //     console.log("The refresh count is:" + refreshCount);
+// //     console.log("Game over. Sucker2");
+// //     $(".chatlog").append("Gameover");
+// //     database.ref("GameOver").push ({
+// //         line: "The other player is no longer connected.  Re-add yourself to join a new game.",
+// //         sender: "WARNING"
+// //     });
+// // });
 
 database.ref("players/2").on("value", function(snapshot) {
     matchWinner = matchWinner;
@@ -383,21 +412,15 @@ $(document).ready(function() {
         console.log(snapshot.val());
         playerOneDecision = snapshot.val().decision;
         if (playerOneDecision == "rock") {
-            var choiceStatement = "<p>Player 1 chose";
-            $("#player-one-rock").prepend(choiceStatement);
-            $("#player-one-choice").append($("#player-one-rock"));
+            $("#player1ChoiceStatement").append($("#player-one-rock"));
             // $("#player-one-rock").css("visibility", "visible");
             setTimeout(turnIsPlayerTwo, 1500);
         } else if (playerOneDecision == "paper") {
-            var choiceStatement = "<p>Player 1 chose";
-            $("#player-one-paper").prepend(choiceStatement);
-            $("#player-one-choice").append($("#player-one-paper"));
+            $("#player1ChoiceStatement").append($("#player-one-paper"));
             // $("#player-one-paper").css("visibility", "visible");
             setTimeout(turnIsPlayerTwo, 1500);
         } else if (playerOneDecision == "scissors") {
-            var choiceStatement = "<p>Player 1 chose";
-            $("#player-one-scissor").prepend(choiceStatement);
-            $("#player-one-choice").append($("#player-one-scissor"));
+            $("#player1ChoiceStatement").append($("#player-one-scissor"));
             // $("#player-one-scissor").css("visibility", "visible");
             setTimeout(turnIsPlayerTwo, 1500);
         }
@@ -409,27 +432,21 @@ $(document).ready(function() {
         console.log(snapshot.val());
         playerTwoDecision = snapshot.val().decision;
         if (playerTwoDecision == "rock") {
-            var choiceStatement = "<p>Player 2 chose";
-            $("#player-two-rock").prepend(choiceStatement);
-            $("#player-two-choice").append($("#player-two-rock"));
+            $("#player2ChoiceStatement").append($("#player-two-rock"));
             $("#player-two-rock").css("visibility", "visible");
-            setTimeout(calculateWinner, 1500);
+            setTimeout(calculateWinner, 1000);
             // setTimeout(putPokemonBack, 2000);
             // setTimeout(turnIsPlayerOne, 2000);
         } else if (playerTwoDecision == "paper") {
-            var choiceStatement = "<p>Player 2 chose";
-            $("#player-two-paper").prepend(choiceStatement);
-            $("#player-two-choice").append($("#player-two-paper"));
+            $("#player2ChoiceStatement").append($("#player-two-paper"));
             $("#player-two-paper").css("visibility", "visible");
-            setTimeout(calculateWinner, 1500);
+            setTimeout(calculateWinner, 1000);
             // setTimeout(putPokemonBack, 2000);
             // setTimeout(turnIsPlayerOne, 2000);
         } else if (playerTwoDecision == "scissors") {
-            var choiceStatement = "<p>Player 2 chose";
-            $("#player-two-scissor").prepend(choiceStatement);
-            $("#player-two-choice").append($("#player-two-scissor"));
+            $("#player2ChoiceStatement").append($("#player-two-scissor"));
             $("#player-two-scissor").css("visibility", "visible");
-            setTimeout(calculateWinner, 1500);
+            setTimeout(calculateWinner, 1000);
             // setTimeout(putPokemonBack, 2000);
             // setTimeout(turnIsPlayerOne, 2000);
         }
@@ -472,42 +489,29 @@ $(document).ready(function() {
     // }
     
 
-    // var refDeletePlayer1 = firebase.database().ref("players/1");
-    // refDeletePlayer1.onDisconnect().remove();
+    var refDeletePlayer1 = firebase.database().ref("players/1");
+    refDeletePlayer1.onDisconnect().remove();
 
     // var refDeleteChat = firebase.database().ref("chat");
     // refDeleteChat.onDisconnect().remove();
 
-    // var refDeleteTurn = firebase.database().ref("turn-counter");
-    // refDeleteTurn.onDisconnect().remove();
+    var refDeleteTurn = firebase.database().ref("turn-counter");
+    refDeleteTurn.onDisconnect().remove();
 
-    // var refDeletePlayer1Choice = firebase.database().ref("player1Choice");
-    // refDeletePlayer1Choice.onDisconnect().remove();
+    var refDeletePlayer1Choice = firebase.database().ref("player1Choice");
+    refDeletePlayer1Choice.onDisconnect().remove();
 
-    // var refDeletePlayer2Choice = firebase.database().ref("player2Choice");
-    // refDeletePlayer2Choice.onDisconnect().remove();
+    var refDeletePlayer2Choice = firebase.database().ref("player2Choice");
+    refDeletePlayer2Choice.onDisconnect().remove();
 
 
-    // var refDeletePlayer2 = firebase.database().ref("players/2");
-    // refDeletePlayer2.onDisconnect().remove();
+    var refDeletePlayer2 = firebase.database().ref("players/2");
+    refDeletePlayer2.onDisconnect().remove();
 
-//     function deleteRef() {
-//         if (globalPlayerStatus == "Player-1") {
-//             refDelete = firebase.database().ref("players/1");
-//             refDelete.onDisconnect().remove(); 
-//         } else if (globalPlayerStatus == "Player-2") {
-//             refDelete = firebase.database().ref("players/2");
-//             refDelete.onDisconnect().remove(); 
-//         } else if (globalPlayerStatus == "") {
-//             console.log("No Global Player Status")
-//         }
-//         console.log("This is the ref to delete: " + refDelete);
-//     }
 
-// //    deleteRef();
-
-//    $(window).on('load', deleteRef);
+   $(window).on('load', testFunction);
 
 });
-            
+
+
         
