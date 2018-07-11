@@ -1,63 +1,91 @@
 .header-container {
-    height: 100px;
-    background-color: pink;
+    height: 150px;
+    background-color: #ccdcff;
+    font-family: 'Fjalla One', sans-serif;
+    text-align: center;
 }
 
 .game-container {
-    height: 700px;
-    background-color: grey;
+    height: 900px;
     width: 70%;
     position: absolute;
+    background-color: #ccdcff;
+    font-family: 'Fjalla One', sans-serif;
+}
+
+#header {
+    font-size: 50px;
 }
 
 
-.chat-container {
-    height: 700px;
-    background-color: lightblue;
-    width: 30%;
-    float: right;
-}
 
 .player-one-box {
     height: 230px;
-    background-color: lightgoldenrodyellow;
+    background-color: #99ccff;
     margin-bottom: 20px;
+    border: 2px solid #80aaff;
+    border-radius: 25px;
 }
 
 .arena-box {
     height: 200px;
-    background-color: lavender;
+    background-color: #ccdcff;
     display: inline-flex;
     text-align: center;
+    margin-left: 15%;
+    border: 2px solid #80aaff;
+    border-radius: 25px;
 }
 
 #player-one-choice {
     background-color: pink;
     width: 200px;
+    border-radius: 25px;
+    border: 1px solid #80aaff;
+    border-radius: 20px;
 }
 
 #versus {
-    background-color: orange;
+    /* background-color: orange; */
     width: 200px;
-    padding-top: 30px;
+    padding-top: 50px;
+    font-size: 80px;
 }
 
 #player-two-choice {
-    background-color: lightcoral;
+    background-color: #ff9999;
     width: 200px; 
+    border-radius: 25px;
+    border: 1px solid #80aaff;
+    border-radius: 20px;
 }
 
 .player-two-box {
     height: 230px;
-    background-color: lightgreen;
+    background-color:#99ccff;
     margin-top: 20px;
+    border-radius: 25px;
+    border: 2px solid #80aaff;
 }
 
 .player-text {
+    border-radius: 15px;
+    border: 2px solid #80aaff;
     height: 60px;
-    font-size: 50px;
-    background-color: white;
-    margin-bottom: 10px;
+    font-size: 30px;
+    background-color: #99bbff;
+    opacity: 0.8;
+}
+
+#player1-text-bar {
+    margin-top: 1.5%;
+    margin-bottom: 1%;
+    margin-left: 2%;
+}
+
+#player2-text-bar {
+    margin-top: 1.5%;
+    margin-left: 2%;
 }
 
 .pokemon-rows {
@@ -71,6 +99,7 @@
 
 .all-pokemon {
     height: 150px;
+    margin-top: 2%;
     /* background-color: lightseagreen; */
     width: 100%;
     margin-right: 25%;
@@ -83,4 +112,35 @@
 .both-scoreboards {
     margin-right: 25%;
     margin-top: 10%;
+}
+
+.chatlog {
+    /* /* width: 110px; */
+    padding: 10px;
+    margin: 2px;
+    height: 650px;
+    background: white;
+    overflow: scroll;
+    border: 1px solid #80aaff;
+    border-radius: 6px;
+}
+
+.chat-container {
+    height: 900px;
+    background-color: #ccdcff;
+    width: 30%;
+    float: right;
+    font-family: 'Fjalla One', sans-serif;
+}
+
+form {
+    display: inline-flex;
+}
+
+#chatboxText {
+    margin-left: 2px;
+}
+
+#chatboxBtn {
+    margin-left: 5px;
 }
