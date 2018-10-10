@@ -19,4 +19,4 @@ Please ensure to download the entire repo in order to have access to all the fil
 
 **Note: In this game, just like with real Pokemon logic, you cannot choose the same pokemon twice in a row.  They'd be too tired and drained of HP anyway! After missing one turn, the pokemon is ready for use again!**
 
-![](https://azukimochi.github.io/RPS-Multiplayer/README_images/screenshot-general.png) 
+![](README_images/screenshot-general.png) 
